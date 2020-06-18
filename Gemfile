@@ -21,6 +21,8 @@ gem 'bcrypt', '~> 3.1.7'
 # Use jwt for tokenisation of user data
 gem 'jwt'
 
+gem 'sprockets', '~>3.0'
+
 # Use Active Storage variant
 # gem 'image_processing', '~> 1.2'
 
@@ -29,9 +31,6 @@ gem 'bootsnap', '>= 1.4.2', require: false
 
 # Use Rack CORS for handling Cross-Origin Resource Sharing (CORS), making cross-origin AJAX possible
 gem 'rack-cors'
-
-# serialisation
-gem 'active_model_serializers'
 
 group :development, :test do
   gem 'annotate'
