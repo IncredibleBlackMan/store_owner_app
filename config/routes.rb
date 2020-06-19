@@ -7,4 +7,12 @@ Rails.application.routes.draw do
       post 'login'
     end
   end
+
+  resources :products do
+    resources :subtype_option_pricing
+
+    resources :subtypes do
+      resources :subtype_options
+    end
+  end
 end
