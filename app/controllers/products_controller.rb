@@ -2,7 +2,7 @@ class ProductsController < ApplicationController
   before_action :find_product, except: %i[create index]
 
   def index
-    product_list = SubtypeOptionPricing.all.map do |product|
+    product_list = Product.all.select(:id, :name, :user_id).map do |product|
       product_price_list(product)
     end
     render json: { products: product_list }, status: :ok
@@ -53,6 +53,25 @@ class ProductsController < ApplicationController
     }
   end
 
+  def option_price_list(pricing)
+    pricing.map do |product|
+      {
+        id: product.id,
+        price: product.price,
+        quantity: product.quantity,
+        subtype_options: subtype_attributes(product.subtype_options)
+      }
+    end
+  end
+
+  def product_price_list(product)
+    {
+      product_id: product.id,
+      product_name: product.name,
+      subtype_options: option_price_list(SubtypeOptionPricing.where(product_id: product.id).select(:id, :subtype_options, :quantity, :price))
+    }
+  end
+
   def subtype_options(product)
     subtypes = Subtype.where(product_id: product)
 
@@ -60,20 +79,9 @@ class ProductsController < ApplicationController
       {
         id: subtype.id,
         name: subtype.name,
-        subtype_options: SubtypeOption.where(subtype_id: subtype.id)
+        subtype_options: SubtypeOption.where(subtype_id: subtype.id).select(:id, :name)
       }
     end
-  end
-
-  def product_price_list(product)
-    {
-      id: product.id,
-      subtype_options: subtype_attributes(product.subtype_options),
-      product_id: product.product_id,
-      product_name: Product.where(id: product.product_id).pluck(:name)[0],
-      price: product.price,
-      quantity: product.quantity
-    }
   end
 
   def subtype_attributes(options)
